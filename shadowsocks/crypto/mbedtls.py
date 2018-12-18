@@ -408,20 +408,22 @@ ciphers = {
 
 
 def run_method(method):
+    from shadowsocks.crypto import openssl
 
     print(method, ': [stream]', 32)
     cipher = MbedTLSStreamCrypto(method, b'k' * 32, b'i' * 16, 1)
-    decipher = MbedTLSStreamCrypto(method, b'k' * 32, b'i' * 16, 0)
+    decipher = openssl.OpenSSLStreamCrypto(method, b'k' * 32, b'i' * 16, 0)
 
     util.run_cipher(cipher, decipher)
 
 
 def run_aead_method(method, key_len=16):
+    from shadowsocks.crypto import openssl
 
     print(method, ': [payload][tag]', key_len)
     key_len = int(key_len)
     cipher = MbedTLSAeadCrypto(method, b'k' * key_len, b'i' * key_len, 1)
-    decipher = MbedTLSAeadCrypto(
+    decipher = openssl.OpenSSLAeadCrypto(
         method,
         b'k' * key_len, b'i' * key_len, 0
     )
@@ -430,11 +432,12 @@ def run_aead_method(method, key_len=16):
 
 
 def run_aead_method_chunk(method, key_len=16):
+    from shadowsocks.crypto import openssl
 
     print(method, ': chunk([size][tag][payload][tag]', key_len)
     key_len = int(key_len)
     cipher = MbedTLSAeadCrypto(method, b'k' * key_len, b'i' * key_len, 1)
-    decipher = MbedTLSAeadCrypto(
+    decipher = openssl.OpenSSLAeadCrypto(
         method,
         b'k' * key_len, b'i' * key_len, 0
     )
